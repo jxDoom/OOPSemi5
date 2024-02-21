@@ -1,6 +1,7 @@
 package notebook.model.repository.impl;
 
 import notebook.model.dao.impl.FileOperation;
+import notebook.util.UserValidator;
 import notebook.util.mapper.impl.UserMapper;
 import notebook.model.User;
 import notebook.model.repository.GBRepository;
@@ -9,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserRepository implements GBRepository {
+public class UserRepository implements GBRepository { // Если класс подвержен к какой-либо одной логике,
+    // то нельзя заставлять его делать вторую логику (первый принцип SOLID)
     private final UserMapper mapper;
     private final FileOperation operation;
 
@@ -57,9 +59,12 @@ public class UserRepository implements GBRepository {
                 .filter(u -> u.getId()
                         .equals(userId))
                 .findFirst().orElseThrow(() -> new RuntimeException("User not found"));
-        editUser.setFirstName(update.getFirstName());
-        editUser.setLastName(update.getLastName());
-        editUser.setPhone(update.getPhone());
+        if (!update.getFirstName().isEmpty())
+                editUser.setFirstName(update.getFirstName());
+        if (!update.getLastName().isEmpty())
+                editUser.setLastName(update.getLastName());
+        if (!update.getPhone().isEmpty())
+                editUser.setPhone(update.getPhone());
         write(users);
         return Optional.of(update);
     }

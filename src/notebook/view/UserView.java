@@ -3,9 +3,13 @@ package notebook.view;
 import notebook.controller.UserController;
 import notebook.model.User;
 import notebook.util.Commands;
+import notebook.util.UserValidator;
 
 import java.util.Scanner;
 
+// class final - от этого класса нельзя наследоваться
+// если final у метода - то этот метод нельзя будет переопределить
+// если final у переменной - это константа, кроме некоторых случаев (например списки ArrayList<>())
 public class UserView {
     private final UserController userController;
 
@@ -35,6 +39,9 @@ public class UserView {
                         throw new RuntimeException(e);
                     }
                     break;
+                case LIST:
+                    System.out.println(userController.readAll());
+                    break;
                 case UPDATE:
                     String userId = prompt("Enter user id: ");
                     userController.updateUser(userId, createUser());
@@ -52,6 +59,9 @@ public class UserView {
         String firstName = prompt("Имя: ");
         String lastName = prompt("Фамилия: ");
         String phone = prompt("Номер телефона: ");
-        return new User(firstName, lastName, phone);
+
+        UserValidator validator = new UserValidator();
+
+        return validator.validate(new User(firstName, lastName, phone));
     }
 }
