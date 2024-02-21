@@ -36,4 +36,10 @@ public class UserController {
         update.setId(Long.parseLong(userId));
         repository.update(Long.parseLong(userId), update);
     }
+
+    public void deleteUser(Long id) {
+        if (repository.delete(id))
+            System.out.println("Удаление пользователя успешно завершено");
+        else System.out.println("Этого пользователя нет в вашем списке");
+    }
 }

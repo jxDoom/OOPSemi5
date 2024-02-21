@@ -13,11 +13,9 @@ import java.util.Optional;
 public class UserRepository implements GBRepository { // Если класс подвержен к какой-либо одной логике,
     // то нельзя заставлять его делать вторую логику (первый принцип SOLID)
     private final UserMapper mapper;
-    private final String fileName;
 
     public UserRepository(String fileName) {
         this.mapper = new UserMapper();
-        this.fileName = fileName;
         try (FileWriter writer = new FileWriter(fileName, true)) {
             writer.flush();
         } catch (IOException e) {
@@ -117,10 +115,21 @@ public class UserRepository implements GBRepository { // Если класс п�
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        List<User> users = findAll();
+        User editUser = users.stream()
+                .filter(u -> u.getId()
+                        .equals(id))
+                .findFirst().orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (users.remove(editUser)) {
+            write(users);
+            return true;
+        }else {
+            return false;
+        }
     }
 
-    private void write(List<User> users) {
+private void write(List<User> users) {
         List<String> lines = new ArrayList<>();
         for (User u: users) {
             lines.add(mapper.toInput(u));
