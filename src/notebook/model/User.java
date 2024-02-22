@@ -1,5 +1,9 @@
 package notebook.model;
 
+import notebook.util.UserValidator;
+
+import java.util.Scanner;
+
 public class User {
     private Long id;
     private String firstName;
@@ -52,8 +56,24 @@ public class User {
         this.phone = phone;
     }
 
+    public String prompt(String message) {
+        Scanner in = new Scanner(System.in);
+        System.out.print(message);
+        return in.nextLine();
+    }
+
+    public User createUser() {
+        firstName = prompt("Имя: ");
+        lastName = prompt("Фамилия: ");
+        phone = prompt("Номер телефона: ");
+
+        UserValidator validator = new UserValidator();
+
+        return validator.validate(new User(firstName, lastName, phone));
+    }
+
     @Override
     public String toString() {
-        return String.format("Идентафикатор: %s\nИмя: %s,\nФамилия: %s,\nТелефон: %s", id, firstName, lastName, phone);
+        return String.format("Идентификатор: %s\nИмя: %s,\nФамилия: %s,\nТелефон: %s", id, firstName, lastName, phone);
     }
 }

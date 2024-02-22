@@ -1,6 +1,7 @@
 package notebook;
 
 import notebook.controller.UserController;
+import notebook.model.User;
 import notebook.model.repository.GBRepository;
 import notebook.model.repository.impl.UserRepository;
 import notebook.view.UserView;
@@ -13,7 +14,7 @@ public class Main {
         createDB();
         GBRepository repository = new UserRepository("db.txt");
         UserController controller = new UserController(repository);
-        UserView view = new UserView(controller);
+        UserView view = new UserView(controller, new User());
         view.run();
 
     }
